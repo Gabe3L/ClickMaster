@@ -45,8 +45,4 @@ public class AutoClickerBackend {
     public boolean isClicking() {
         return clicking;
     }
-
-    public void setClicking(boolean clicking) {
-        this.clicking = clicking;
-    }
 }

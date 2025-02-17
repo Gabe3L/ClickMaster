@@ -13,6 +13,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 public class AutoClicker extends Application {
     private AutoClickerBackend backend;
     private boolean isDarkMode = true;
+    private Label statusLabel;
 
     public static void main(String[] args) {
         launch(args);
@@ -57,7 +59,7 @@ public class AutoClicker extends Application {
                 int interval = Integer.parseInt(intervalField.getText());
                 int button = buttonChoice.getValue().equals("Left Click") ? InputEvent.BUTTON1_DOWN_MASK : InputEvent.BUTTON3_DOWN_MASK;
                 backend.startClicking(interval, button);
-                showStatus("Running");
+                statusLabel.setText("Status: Running");
             } catch (NumberFormatException ex) {
                 showAlert("Invalid Interval", "Please enter a valid number for the interval.");
             }
@@ -67,14 +69,14 @@ public class AutoClicker extends Application {
         stopButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 15px;");
         stopButton.setOnAction(e -> {
             backend.stopClicking();
-            showStatus("Stopped");
+            statusLabel.setText("Status: Stopped");
         });
 
-        Label statusLabel = new Label("Status: Stopped");
+        statusLabel = new Label("Status: Stopped");
         statusLabel.setTextFill(Color.web("#ecf0f1"));
 
         ToggleButton themeToggle = new ToggleButton("Toggle Theme");
-        themeToggle.setOnAction(e -> toggleTheme());
+        themeToggle.setOnAction(e -> toggleTheme(primaryStage));
 
         HBox buttons = new HBox(10, startButton, stopButton);
         buttons.setAlignment(Pos.CENTER);
@@ -85,7 +87,26 @@ public class AutoClicker extends Application {
         layout.getChildren().addAll(title, intervalField, buttonChoice, buttons, statusLabel, themeToggle);
 
         Scene scene = new Scene(layout, 350, 300);
-        applyDarkTheme(scene);
+        applyTheme(scene);
+
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.F6) {
+                if (backend.isClicking()) {
+                    backend.stopClicking();
+                    statusLabel.setText("Status: Stopped");
+                } else {
+                    try {
+                        int interval = Integer.parseInt(intervalField.getText());
+                        int button = buttonChoice.getValue().equals("Left Click") ? InputEvent.BUTTON1_DOWN_MASK : InputEvent.BUTTON3_DOWN_MASK;
+                        backend.startClicking(interval, button);
+                        statusLabel.setText("Status: Running");
+                    } catch (NumberFormatException ex) {
+                        showAlert("Invalid Interval", "Please enter a valid number for the interval.");
+                    }
+                }
+            }
+        });
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -98,16 +119,18 @@ public class AutoClicker extends Application {
         alert.showAndWait();
     }
 
-    private void showStatus(String status) {
-        Label statusLabel = new Label("Status: " + status);
-        statusLabel.setTextFill(Color.web("#ecf0f1"));
-    }
-
-    private void toggleTheme() {
+    private void toggleTheme(Stage primaryStage) {
         isDarkMode = !isDarkMode;
+        applyTheme(primaryStage.getScene());
     }
 
-    private void applyDarkTheme(Scene scene) {
-        scene.setFill(Color.BLACK);
+    private void applyTheme(Scene scene) {
+        if (isDarkMode) {
+            scene.setFill(Color.BLACK);
+            scene.getRoot().setStyle("-fx-background-color: #2c3e50; -fx-text-fill: #ecf0f1;");
+        } else {
+            scene.setFill(Color.WHITE);
+            scene.getRoot().setStyle("-fx-background-color: #ecf0f1; -fx-text-fill: #2c3e50;");
+        }
     }
 }
