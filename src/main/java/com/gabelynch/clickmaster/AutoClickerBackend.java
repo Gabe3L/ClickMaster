@@ -15,23 +15,25 @@ public class AutoClickerBackend {
         robot = new Robot();
     }
 
-    public void startClicking(int interval, int button) {
-        if (clicking) {
-            return;
-        }
+    public void startClicking(int interval, int button, int x, int y) {
+        if (clicking) return;
 
         clicking = true;
         executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleAtFixedRate(() -> {
-            if (clicking) {
-                robot.mousePress(button);
-                try {
-                    Thread.sleep(2);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-                robot.mouseRelease(button);
+            if (!clicking) return;
+            
+            if (x > 0 && y > 0) {
+                robot.mouseMove(x, y);
             }
+            robot.mousePress(button);
+
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            robot.mouseRelease(button);
         }, 0, interval, TimeUnit.MILLISECONDS);
     }
 
@@ -40,9 +42,5 @@ public class AutoClickerBackend {
         if (executorService != null) {
             executorService.shutdown();
         }
-    }
-
-    public boolean isClicking() {
-        return clicking;
     }
 }

@@ -13,7 +13,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -46,19 +45,31 @@ public class AutoClicker extends Application {
 
         TextField intervalField = new TextField();
         intervalField.setPromptText("Interval (ms)");
-        intervalField.setStyle("-fx-background-radius: 15px; -fx-padding: 5px;");
+        
+        TextField xField = new TextField();
+        xField.setPromptText("X Coordinate");
+        
+        TextField yField = new TextField();
+        yField.setPromptText("Y Coordinate");
 
         ChoiceBox<String> buttonChoice = new ChoiceBox<>();
-        buttonChoice.getItems().addAll("Left Click", "Right Click");
+        buttonChoice.getItems().addAll("Left Click", "Middle Click", "Right Click");
         buttonChoice.setValue("Left Click");
 
         Button startButton = new Button("Start");
-        startButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 15px;");
         startButton.setOnAction(e -> {
             try {
-                int interval = Integer.parseInt(intervalField.getText());
-                int button = buttonChoice.getValue().equals("Left Click") ? InputEvent.BUTTON1_DOWN_MASK : InputEvent.BUTTON3_DOWN_MASK;
-                backend.startClicking(interval, button);
+                int interval = Integer.parseInt(intervalField.getText().trim());
+                int button;
+                button = switch (buttonChoice.getValue()) {
+                    case "Middle Click" -> InputEvent.BUTTON2_DOWN_MASK;
+                    case "Right Click" -> InputEvent.BUTTON3_DOWN_MASK;
+                    default -> InputEvent.BUTTON1_DOWN_MASK;
+                };
+                int x = xField.getText().trim().isEmpty() ? -1 : Integer.parseInt(xField.getText().trim());
+                int y = yField.getText().trim().isEmpty() ? -1 : Integer.parseInt(yField.getText().trim());
+                
+                backend.startClicking(interval, button, x, y);
                 statusLabel.setText("Status: Running");
             } catch (NumberFormatException ex) {
                 showAlert("Invalid Interval", "Please enter a valid number for the interval.");
@@ -66,7 +77,6 @@ public class AutoClicker extends Application {
         });
 
         Button stopButton = new Button("Stop");
-        stopButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 15px;");
         stopButton.setOnAction(e -> {
             backend.stopClicking();
             statusLabel.setText("Status: Stopped");
@@ -81,31 +91,12 @@ public class AutoClicker extends Application {
         HBox buttons = new HBox(10, startButton, stopButton);
         buttons.setAlignment(Pos.CENTER);
 
-        VBox layout = new VBox(15);
+        VBox layout = new VBox(15, title, intervalField, xField, yField, buttonChoice, buttons, statusLabel, themeToggle);
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll(title, intervalField, buttonChoice, buttons, statusLabel, themeToggle);
 
-        Scene scene = new Scene(layout, 350, 300);
+        Scene scene = new Scene(layout, 400, 350);
         applyTheme(scene);
-
-        scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.F6) {
-                if (backend.isClicking()) {
-                    backend.stopClicking();
-                    statusLabel.setText("Status: Stopped");
-                } else {
-                    try {
-                        int interval = Integer.parseInt(intervalField.getText());
-                        int button = buttonChoice.getValue().equals("Left Click") ? InputEvent.BUTTON1_DOWN_MASK : InputEvent.BUTTON3_DOWN_MASK;
-                        backend.startClicking(interval, button);
-                        statusLabel.setText("Status: Running");
-                    } catch (NumberFormatException ex) {
-                        showAlert("Invalid Interval", "Please enter a valid number for the interval.");
-                    }
-                }
-            }
-        });
 
         primaryStage.setScene(scene);
         primaryStage.show();
