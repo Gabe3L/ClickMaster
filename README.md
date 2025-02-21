@@ -13,15 +13,15 @@ ClickMaster is a simple and customizable auto-clicker built in Java using JavaFX
 
 ## Requirements
 
-- Java 11 or later
-- JavaFX (included in Java 11+ or can be downloaded separately)
+- Java 17
+- JavaFX
 
 ## Installation & Usage
 
 1. Clone this repository:
 
    ```sh
-   git clone https://github.com/yourusername/ClickMaster.git
+   git clone https://github.com/Gabe3L/ClickMaster.git
    cd ClickMaster
 2. Compile and run the program:
 
@@ -50,7 +50,7 @@ ClickMaster is a simple and customizable auto-clicker built in Java using JavaFX
 
 ## License
 
-This project is licensed under the **MIT License**.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
