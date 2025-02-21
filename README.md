@@ -1,10 +1,10 @@
 # ClickMaster - Java AutoClicker
 
-ClickMaster is a simple and customizable auto-clicker built in Java using JavaFX and AWT. It allows users to automate mouse clicks at a specified interval and position, with support for different mouse buttons.
+ClickMaster is a simple and customizable auto-clicker built in Java using JavaFX and AWT. It allows users to automate mouse clicks to reduce fatigue and speed up repetitive tasks.
 
 ## Features
 
-- Set custom click intervals (milliseconds)
+- Set custom click intervals
 - Choose between Left, Middle, or Right mouse clicks
 - Specify X and Y coordinates for precise clicking (optional)
 - Simple start/stop functionality
