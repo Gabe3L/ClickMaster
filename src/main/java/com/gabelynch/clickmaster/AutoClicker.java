@@ -15,8 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class AutoClicker extends Application {
@@ -40,8 +38,8 @@ public class AutoClicker extends Application {
         primaryStage.setTitle("AutoClicker");
 
         Label title = new Label("ClickMaster");
-        title.setFont(new Font("Arial", 24));
-        title.setTextFill(Color.web("#8e44ad"));
+        title.setFont(Config.TITLE_FONT);
+        title.setTextFill(Config.TITLE_COLOUR);
 
         TextField intervalField = new TextField();
         intervalField.setPromptText("Interval (ms)");
@@ -83,7 +81,7 @@ public class AutoClicker extends Application {
         });
 
         statusLabel = new Label("Status: Stopped");
-        statusLabel.setTextFill(Color.web("#ecf0f1"));
+        statusLabel.setTextFill(Config.STATUS_MODE_COLOUR);
 
         ToggleButton themeToggle = new ToggleButton("Toggle Theme");
         themeToggle.setOnAction(e -> toggleTheme(primaryStage));
@@ -95,7 +93,7 @@ public class AutoClicker extends Application {
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(layout, 400, 350);
+        Scene scene = new Scene(layout, Config.SCREEN_WIDTH, Config.SCREEN_HEIGHT);
         applyTheme(scene);
 
         primaryStage.setScene(scene);
@@ -117,11 +115,9 @@ public class AutoClicker extends Application {
 
     private void applyTheme(Scene scene) {
         if (isDarkMode) {
-            scene.setFill(Color.BLACK);
-            scene.getRoot().setStyle("-fx-background-color: #2c3e50; -fx-text-fill: #ecf0f1;");
+            scene.getRoot().setStyle(Config.DARK_BACKGROUND_COLOUR);
         } else {
-            scene.setFill(Color.WHITE);
-            scene.getRoot().setStyle("-fx-background-color: #ecf0f1; -fx-text-fill: #2c3e50;");
+            scene.getRoot().setStyle(Config.LIGHT_BACKGROUND_COLOUR);
         }
     }
 }
