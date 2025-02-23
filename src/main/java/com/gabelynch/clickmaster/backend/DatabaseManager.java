@@ -29,7 +29,6 @@ public class DatabaseManager {
             }
         } catch (SQLException e) {
             System.out.println("Error creating database: " + e.getMessage());
-            System.out.println(e.getMessage());
         }
     }
 
