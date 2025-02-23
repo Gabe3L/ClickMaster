@@ -1,4 +1,4 @@
-package com.gabelynch.clickmaster.frontend;
+package com.gabelynch.clickmaster.config;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

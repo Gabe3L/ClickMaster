@@ -1,6 +1,7 @@
 package com.gabelynch.clickmaster.frontend;
 
 import com.gabelynch.clickmaster.Main;
+import com.gabelynch.clickmaster.config.UIConfig;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -54,7 +55,7 @@ public class UIComponents {
 
     public void toggleTheme(Stage primaryStage, boolean isDarkMode) {
         main.setDarkMode(!main.isDarkMode());
-        
+
         String themeStyle = main.isDarkMode() ? UIConfig.DARK_BACKGROUND_COLOUR : UIConfig.LIGHT_BACKGROUND_COLOUR;
         primaryStage.getScene().getRoot().setStyle(themeStyle);
     }

@@ -1,8 +1,9 @@
 package com.gabelynch.clickmaster;
 
+import com.gabelynch.clickmaster.backend.DatabaseManager;
 import com.gabelynch.clickmaster.backend.RobotController;
+import com.gabelynch.clickmaster.config.UIConfig;
 import com.gabelynch.clickmaster.frontend.UIComponents;
-import com.gabelynch.clickmaster.frontend.UIConfig;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -26,6 +27,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        DatabaseManager.initializeDatabase(); 
         setupScene(createUI(primaryStage), primaryStage);
     }
 
@@ -64,6 +66,7 @@ public class Main extends Application {
             int x = parseCoordinate(xField);
             int y = parseCoordinate(yField);
 
+            DatabaseManager.saveSettings(interval, button, x, y);
             RobotController.startClicking(interval, button, x, y);
         } catch (NumberFormatException ex) {
             showAlert("Invalid Interval", "Please enter a valid number for the interval.");
