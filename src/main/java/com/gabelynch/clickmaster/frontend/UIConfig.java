@@ -1,9 +1,9 @@
-package com.gabelynch.clickmaster;
+package com.gabelynch.clickmaster.frontend;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class Config {
+public class UIConfig {
     public static int SCREEN_HEIGHT = 400;
     public static int SCREEN_WIDTH = 350;
 
