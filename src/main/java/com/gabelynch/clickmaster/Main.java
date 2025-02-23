@@ -26,9 +26,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("AutoClicker");
+        setupScene(createUI(primaryStage), primaryStage);
+    }
 
-        // UI components
+    private VBox createUI(Stage primaryStage) {
         Label title = uiComponents.createTitleLabel();
         TextField intervalField = uiComponents.createTextField("Interval (ms)");
         TextField xField = uiComponents.createTextField("X Coordinate");
@@ -38,16 +39,20 @@ public class Main extends Application {
         Button startButton = uiComponents.createButton("Start", () -> startClicking(intervalField, buttonChoice, xField, yField));
         Button stopButton = uiComponents.createButton("Stop", RobotController::stopClicking);
 
+        HBox buttons = uiComponents.createButtonBox(startButton, stopButton);
+
         ToggleButton themeToggle = uiComponents.createThemeToggle(primaryStage, isDarkMode);
 
-        // Layout
-        HBox buttons = uiComponents.createButtonBox(startButton, stopButton);
         VBox layout = uiComponents.createLayout(title, intervalField, xField, yField, buttonChoice, buttons, themeToggle);
 
-        // Scene Setup
+        return layout; 
+    }
+
+    private void setupScene(VBox layout, Stage primaryStage) {
         Scene scene = new Scene(layout, UIConfig.SCREEN_WIDTH, UIConfig.SCREEN_HEIGHT);
         applyTheme(scene);
 
+        primaryStage.setTitle("AutoClicker");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -80,7 +85,7 @@ public class Main extends Application {
     private void applyTheme(Scene scene) {
         scene.getRoot().setStyle(isDarkMode ? UIConfig.DARK_BACKGROUND_COLOUR : UIConfig.LIGHT_BACKGROUND_COLOUR);
     }
-    
+
     public boolean isDarkMode() {
         return isDarkMode;
     }
