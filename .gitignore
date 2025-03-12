@@ -1,4 +1,5 @@
+.vscode/
 .env
 
 database/
-target/maven-status/
+target/

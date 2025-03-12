@@ -28,7 +28,6 @@ ClickMaster is a simple and customizable auto-clicker built in Java using JavaFX
     ```sh
     javac --module-path /path/to/javafx/lib --add-modules javafx.controls,javafx.fxml -d bin src/com/gabelynch/clickmaster/*.java
     java --module-path /path/to/javafx/lib --add-modules javafx.controls,javafx.fxml -cp bin com.gabelynch.clickmaster.AutoClicker
-
 ## How to Use
 
 1. Open the program.
