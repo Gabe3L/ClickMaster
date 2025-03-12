@@ -1,13 +1,17 @@
 package com.gabelynch.clickmaster.backend;
 
+import java.awt.event.InputEvent;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DatabaseManager {
+    private static final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
     private static final String DB_URL = "jdbc:sqlite:database/clickmaster.db";
 
     public static Connection connect() throws SQLException {
@@ -17,6 +21,7 @@ public class DatabaseManager {
     public static void initializeDatabase() {
         File dbFile = new File("database/clickmaster.db");
         if (!dbFile.exists()) {
+            createDatabaseDirectory();
             createDatabase();
         }
     }
@@ -24,11 +29,18 @@ public class DatabaseManager {
     private static void createDatabase() {
         try (Connection connection = DriverManager.getConnection(DB_URL)) {
             if (connection != null) {
-                System.out.println("Database created successfully.");
+                logger.log(Level.INFO, "Created the Database.");
                 createTables(connection);
             }
         } catch (SQLException e) {
-            System.out.println("Error creating database: " + e.getMessage());
+            logger.log(Level.SEVERE, String.format("Error creating database: %s", e.getMessage()));
+        }
+    }
+
+    private static void createDatabaseDirectory() {
+        File directory = new File("database");
+        if (!directory.exists()) {
+            directory.mkdirs();
         }
     }
 
@@ -42,10 +54,9 @@ public class DatabaseManager {
         
         try {
             connection.createStatement().execute(createTableSQL);
-            System.out.println("Table created or already exists.");
+            logger.log(Level.INFO, "Table created or already exists.");
         } catch (SQLException e) {
-            System.out.println("Error creating table: " + e.getMessage());
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, String.format("Error creating table: %s", e.getMessage()));
         }
     }
 
@@ -59,27 +70,26 @@ public class DatabaseManager {
             statement.setInt(3, x);
             statement.setInt(4, y);
             statement.executeUpdate();
-            System.out.println("Settings saved successfully.");
+            logger.log(Level.INFO, "Settings saved successfully.");
         } catch (SQLException e) {
-            System.err.println("Error saving settings: " + e.getMessage());
+            logger.log(Level.SEVERE, String.format("Error saving settings: %s", e.getMessage()));
         }
     }
 
-    public static void loadLastSettings() {
+    public static int[] loadLastSettings() {
         String selectSQL = "SELECT * FROM settings ORDER BY id DESC LIMIT 1";
 
         try (Connection conn = connect();
              PreparedStatement stmt = conn.prepareStatement(selectSQL);
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
-                System.out.println("Last Saved Settings:");
-                System.out.println("Interval: " + rs.getInt("interval"));
-                System.out.println("Button: " + rs.getString("button"));
-                System.out.println("X: " + rs.getInt("x"));
-                System.out.println("Y: " + rs.getInt("y"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error loading settings: " + e.getMessage());
+            return new int[] { rs.getInt("interval"), rs.getInt("x"), rs.getInt("y"), rs.getInt("button") };
         }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, String.format("Error loading settings: %s", e.getMessage()));
+        }
+        
+        return new int[] { 100, -1, -1, InputEvent.BUTTON1_DOWN_MASK 
+        };
     }
 }

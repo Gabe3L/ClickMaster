@@ -28,6 +28,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         DatabaseManager.initializeDatabase(); 
+        DatabaseManager.loadLastSettings();
         setupScene(createUI(primaryStage), primaryStage);
     }
 
