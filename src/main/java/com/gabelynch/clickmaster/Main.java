@@ -1,5 +1,8 @@
 package com.gabelynch.clickmaster;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gabelynch.clickmaster.backend.DatabaseManager;
 import com.gabelynch.clickmaster.backend.RobotController;
 import com.gabelynch.clickmaster.config.UIConfig;
@@ -18,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private final UIComponents uiComponents = new UIComponents(this);
     private boolean isDarkMode = true;
 
@@ -70,6 +74,7 @@ public class Main extends Application {
             DatabaseManager.saveSettings(interval, button, x, y);
             RobotController.startClicking(interval, button, x, y);
         } catch (NumberFormatException ex) {
+            logger.error("Invalid interval entered: {}", intervalField.getText().trim(), ex);
             showAlert("Invalid Interval", "Please enter a valid number for the interval.");
         }
     }
@@ -88,6 +93,7 @@ public class Main extends Application {
 
     private void applyTheme(Scene scene) {
         scene.getRoot().setStyle(isDarkMode ? UIConfig.DARK_BACKGROUND_COLOUR : UIConfig.LIGHT_BACKGROUND_COLOUR);
+        logger.debug("Theme applied: {}", isDarkMode ? "Dark" : "Light");
     }
 
     public boolean isDarkMode() {

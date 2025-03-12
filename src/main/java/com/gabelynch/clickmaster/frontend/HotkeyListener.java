@@ -2,13 +2,12 @@ package com.gabelynch.clickmaster.frontend;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import com.gabelynch.clickmaster.backend.DatabaseManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HotkeyListener extends KeyAdapter {
-    private static final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(HotkeyListener.class);
     private boolean isRunning;
 
     public HotkeyListener() {
@@ -19,7 +18,7 @@ public class HotkeyListener extends KeyAdapter {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_F6) {
             isRunning = !isRunning;
-            logger.log(Level.FINEST, (isRunning ? "AutoClicker started" : "AutoClicker stopped"));
+            logger.debug(isRunning ? "AutoClicker started" : "AutoClicker stopped");
         }
     }
 

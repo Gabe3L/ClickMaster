@@ -7,11 +7,12 @@ import java.awt.event.InputEvent;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RobotController {
-    private static final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(RobotController.class);
     private static boolean isClicking = false;
     private static Robot robot;
     private static ScheduledExecutorService executorService;
@@ -21,7 +22,7 @@ public class RobotController {
             robot = new Robot();
             executorService = Executors.newSingleThreadScheduledExecutor();
         } catch (AWTException e) {
-            logger.log(Level.SEVERE, String.format("Error initializing robot: %s", e.getMessage()));
+            logger.error("Error initializing robot: " + e.getMessage());
         }
     }
 
@@ -38,9 +39,9 @@ public class RobotController {
                     robot.mousePress(button);
                     robot.mouseRelease(button);
                 } catch (NullPointerException e) {
-                    logger.log(Level.SEVERE, String.format("Robot object is not initialized: %s", e.getMessage()));
+                    logger.error("Robot object is not initialized: " + e.getMessage());
                 } catch (IllegalArgumentException e) {
-                    logger.log(Level.SEVERE, String.format("Invalid argument provided for mouse movement or click: %s", e.getMessage()));
+                    logger.error("Invalid argument provided for mouse movement or click: " + e.getMessage());
                 }
             }, 0, interval, TimeUnit.MILLISECONDS); 
         }

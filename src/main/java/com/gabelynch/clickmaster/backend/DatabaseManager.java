@@ -7,11 +7,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DatabaseManager {
-    private static final Logger logger = Logger.getLogger(DatabaseManager.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
     private static final String DB_URL = "jdbc:sqlite:database/clickmaster.db";
 
     public static Connection connect() throws SQLException {
@@ -29,11 +30,11 @@ public class DatabaseManager {
     private static void createDatabase() {
         try (Connection connection = DriverManager.getConnection(DB_URL)) {
             if (connection != null) {
-                logger.log(Level.INFO, "Created the Database.");
+                logger.info("Created the Database.");
                 createTables(connection);
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, String.format("Error creating database: %s", e.getMessage()));
+            logger.error("Error creating database: " + e.getMessage());
         }
     }
 
@@ -54,9 +55,9 @@ public class DatabaseManager {
         
         try {
             connection.createStatement().execute(createTableSQL);
-            logger.log(Level.INFO, "Table created or already exists.");
+            logger.info("Table created or already exists.");
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, String.format("Error creating table: %s", e.getMessage()));
+            logger.error("Error creating table: " + e.getMessage());
         }
     }
 
@@ -70,9 +71,9 @@ public class DatabaseManager {
             statement.setInt(3, x);
             statement.setInt(4, y);
             statement.executeUpdate();
-            logger.log(Level.INFO, "Settings saved successfully.");
+            logger.info("Settings saved successfully.");
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, String.format("Error saving settings: %s", e.getMessage()));
+            logger.error("Error saving settings: " + e.getMessage());
         }
     }
 
@@ -86,7 +87,7 @@ public class DatabaseManager {
             return new int[] { rs.getInt("interval"), rs.getInt("x"), rs.getInt("y"), rs.getInt("button") };
         }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, String.format("Error loading settings: %s", e.getMessage()));
+            logger.error("Error loading settings: " + e.getMessage());
         }
         
         return new int[] { 100, -1, -1, InputEvent.BUTTON1_DOWN_MASK 
